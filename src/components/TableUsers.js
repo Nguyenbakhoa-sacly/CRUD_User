@@ -33,60 +33,56 @@ const TableUsers = () => {
   }
   return (
     <>
-      <div className='mt-5'>
-        <Container>
-          <div className=''>
+      <div className='mt-3'>
+        {/* <Container> */}
+        <Table striped bordered hover>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Email</th>
+              <th>First name</th>
+              <th>Last name</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              listUser && listUser.map((user, index) => {
+                return (
+                  <tr key={`users-${index}`}>
+                    <td>{user.id}</td>
+                    <td>{user.email}</td>
+                    <td>{user.first_name}</td>
+                    <td>{user.last_name}</td>
+                  </tr>
+                )
+              })
+            }
 
-          </div>
-          <Table striped bordered hover>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Email</th>
-                <th>First name</th>
-                <th>Last name</th>
-              </tr>
-            </thead>
-            <tbody>
-              {
-                listUser && listUser.map((user, index) => {
-                  return (
-                    <tr key={`users-${index}`}>
-                      <td>{user.id}</td>
-                      <td>{user.email}</td>
-                      <td>{user.first_name}</td>
-                      <td>{user.last_name}</td>
-                    </tr>
-                  )
-                })
-              }
+          </tbody>
+        </Table>
+        <div className=' justify-content-center  d-flex'>
 
-            </tbody>
-          </Table>
-          <div className=' justify-content-center  d-flex'>
-
-            <ReactPaginate
-              breakLabel="..."
-              nextLabel="next >"
-              onPageChange={handlePageClick}
-              pageRangeDisplayed={5}
-              pageCount={totalPages}
-              previousLabel="< previous"
-              renderOnZeroPageCount={null}
-              pageClassName="page-item"
-              pageLinkClassName="page-link"
-              previousClassName="page-item"
-              previousLinkClassName="page-link"
-              nextClassName="page-item"
-              nextLinkClassName="page-link"
-              breakClassName="page-item"
-              breakLinkClassName="page-link"
-              containerClassName="pagination"
-              activeClassName="active"
-
-            />
-          </div>
-        </Container>
+          <ReactPaginate
+            breakLabel="..."
+            nextLabel="next >"
+            onPageChange={handlePageClick}
+            pageRangeDisplayed={5}
+            pageCount={totalPages}
+            previousLabel="< previous"
+            renderOnZeroPageCount={null}
+            pageClassName="page-item"
+            pageLinkClassName="page-link"
+            previousClassName="page-item"
+            previousLinkClassName="page-link"
+            nextClassName="page-item"
+            nextLinkClassName="page-link"
+            breakClassName="page-item"
+            breakLinkClassName="page-link"
+            containerClassName="pagination"
+            activeClassName="active"
+          />
+        </div>
+        {/* </Container> */}
       </div>
     </>
   )
