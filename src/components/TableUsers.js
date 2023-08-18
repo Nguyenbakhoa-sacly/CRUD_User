@@ -1,16 +1,19 @@
 
 import React from 'react'
 import Table from 'react-bootstrap/Table';
-import Container from 'react-bootstrap/Container';
 import { useState, useEffect } from 'react';
 import { fetchAllUser } from '../services/UserService'
 import ReactPaginate from 'react-paginate';
-const TableUsers = () => {
-
+import { ModalAddNew } from '../components';
+import ModalEditUser from './ModalEditUser';
+import lodash from 'lodash';
+const TableUsers = (props) => {
+  const { show, onHide } = props;
+  const [showEdit, setShowEdit] = useState(false)
   const [listUser, setListUser] = useState([])
   const [totalUsers, setTotalUsers] = useState(0)
   const [totalPages, setTotalPages] = useState(0)
-
+  const [dataEditUser, setDataEditUser] = useState({})
   useEffect(() => {
     //lay phan tu từ trang dau tien
     getUsers(1);
@@ -26,15 +29,33 @@ const TableUsers = () => {
     }
   }
 
+  const handleUpDateTable = (user) => {
+    setListUser([user, ...listUser])
+  }
+
+
+  const handleEditUserFromEdit = (user) => {
+    let cloneListUser = lodash.cloneDeep(listUser)
+    //tim index va so sach index cua user from edit
+    let index = listUser.findIndex(index => index.id === user.id);
+    //thay the firsrt_name 
+    cloneListUser[index].first_name = user.first_name
+    setListUser(cloneListUser)
+  }
+  //phan trang
   const handlePageClick = (e) => {
     //them dau cong de cover kieu string sang kieu number
     getUsers(+e.selected + 1);
 
   }
+  const handleEditUser = (user) => {
+    setShowEdit(true)
+    setDataEditUser(user)
+
+  }
   return (
     <>
       <div className='mt-3'>
-        {/* <Container> */}
         <Table striped bordered hover>
           <thead>
             <tr>
@@ -42,6 +63,7 @@ const TableUsers = () => {
               <th>Email</th>
               <th>First name</th>
               <th>Last name</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -53,6 +75,13 @@ const TableUsers = () => {
                     <td>{user.email}</td>
                     <td>{user.first_name}</td>
                     <td>{user.last_name}</td>
+                    <td className=' flex flex-row '>
+                      <button
+                        onClick={() => handleEditUser(user)}
+                        className='btn btn-outline-primary me-3'>Edit
+                      </button>
+                      <button className='btn btn-outline-secondary'>Delete</button>
+                    </td>
                   </tr>
                 )
               })
@@ -82,8 +111,21 @@ const TableUsers = () => {
             activeClassName="active"
           />
         </div>
-        {/* </Container> */}
       </div>
+
+
+      <ModalAddNew
+        show={show}
+        onHide={onHide}
+        handleUpDateTable={handleUpDateTable}
+      />
+
+      <ModalEditUser
+        show={showEdit}
+        onHide={() => setShowEdit(false)}
+        dataEditUser={dataEditUser}
+        handleEditUserFromEdit={handleEditUserFromEdit}
+      />
     </>
   )
 }
