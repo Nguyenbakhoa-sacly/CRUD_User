@@ -31,6 +31,8 @@ const ModalAddNew = (props) => {
     <div>
       <Modal
         {...props}
+        backdrop="static"
+        keyboard={false}
         size="base"
         aria-labelledby="contained-modal-title-vcenter"
         centered
@@ -57,10 +59,12 @@ const ModalAddNew = (props) => {
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={onHide}>Close</Button>
+          <Button
+            variant="outline-secondary"
+            onClick={onHide}>Close</Button>
           <Button
             onClick={handleAddUsers}
-            variant="success">Add User</Button>
+            variant="outline-success">Add User</Button>
         </Modal.Footer>
       </Modal>
     </div>

@@ -6,14 +6,17 @@ import { fetchAllUser } from '../services/UserService'
 import ReactPaginate from 'react-paginate';
 import { ModalAddNew } from '../components';
 import ModalEditUser from './ModalEditUser';
+import ModalConfirm from './ModalConfirm';
 import lodash from 'lodash';
 const TableUsers = (props) => {
   const { show, onHide } = props;
   const [showEdit, setShowEdit] = useState(false)
+  const [showDel, setShowDel] = useState(false)
   const [listUser, setListUser] = useState([])
   const [totalUsers, setTotalUsers] = useState(0)
   const [totalPages, setTotalPages] = useState(0)
   const [dataEditUser, setDataEditUser] = useState({})
+  const [dataDelUser, setDataDelUser] = useState({})
   useEffect(() => {
     //lay phan tu từ trang dau tien
     getUsers(1);
@@ -21,14 +24,13 @@ const TableUsers = (props) => {
 
   const getUsers = async (page) => {
     let res = await fetchAllUser(page);
-    console.log('>>>check res:', res)
     if (res && res.data) {
       setListUser(res.data)
       setTotalUsers(res.total)
       setTotalPages(res.total_pages)
     }
   }
-
+  //update user
   const handleUpDateTable = (user) => {
     setListUser([user, ...listUser])
   }
@@ -42,16 +44,30 @@ const TableUsers = (props) => {
     cloneListUser[index].first_name = user.first_name
     setListUser(cloneListUser)
   }
+
+  const handelDelUsersfromConfirm = (user) => {
+    let cloneListUser = lodash.cloneDeep(listUser)
+    cloneListUser = cloneListUser.filter(item => item.id !== user.id)
+    setListUser(cloneListUser)
+    console.log(cloneListUser)
+  }
   //phan trang
   const handlePageClick = (e) => {
     //them dau cong de cover kieu string sang kieu number
     getUsers(+e.selected + 1);
 
   }
+  //edit
   const handleEditUser = (user) => {
     setShowEdit(true)
     setDataEditUser(user)
 
+  }
+
+  //delete
+  const handelDelUser = (user) => {
+    setShowDel(true)
+    setDataDelUser(user)
   }
   return (
     <>
@@ -80,7 +96,10 @@ const TableUsers = (props) => {
                         onClick={() => handleEditUser(user)}
                         className='btn btn-outline-primary me-3'>Edit
                       </button>
-                      <button className='btn btn-outline-secondary'>Delete</button>
+                      <button
+                        onClick={() => handelDelUser(user)}
+                        className='btn btn-outline-danger'>Delete
+                      </button>
                     </td>
                   </tr>
                 )
@@ -125,6 +144,12 @@ const TableUsers = (props) => {
         onHide={() => setShowEdit(false)}
         dataEditUser={dataEditUser}
         handleEditUserFromEdit={handleEditUserFromEdit}
+      />
+      <ModalConfirm
+        show={showDel}
+        onHide={() => setShowDel(false)}
+        dataDelUser={dataDelUser}
+        handelDelUsersfromConfirm={handelDelUsersfromConfirm}
       />
     </>
   )

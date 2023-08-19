@@ -20,7 +20,7 @@ function App() {
             <p className='mb-0 fs-4 fw-semibold'>List Users</p>
             <button
               onClick={() => handleAddNewUser()}
-              className='btn btn-success '
+              className='btn btn-outline-success '
             >Add New User</button>
           </div>
 

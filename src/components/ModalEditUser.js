@@ -19,6 +19,7 @@ const ModalEditUser = (props) => {
 		onHide()
 		toast.success('A user edit is success')
 	}
+
 	useEffect(() => {
 		//kiem tra show modaledit
 		if (show) {
@@ -31,6 +32,8 @@ const ModalEditUser = (props) => {
 		<div>
 			<Modal
 				{...props}
+				backdrop="static"
+				keyboard={false}
 				size="base"
 				aria-labelledby="contained-modal-title-vcenter"
 				centered
@@ -57,10 +60,12 @@ const ModalEditUser = (props) => {
 					</div>
 				</Modal.Body>
 				<Modal.Footer>
-					<Button onClick={onHide}>Close</Button>
+					<Button
+						variant="outline-secondary"
+						onClick={onHide}>Close</Button>
 					<Button
 						onClick={() => handelComfirm()}
-						variant="success">Comfirm</Button>
+						variant="outline-success">Comfirm</Button>
 				</Modal.Footer>
 			</Modal>
 		</div>
