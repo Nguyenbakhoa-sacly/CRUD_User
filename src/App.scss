@@ -15,4 +15,10 @@ code {
         monospace;
 }
 
-.app {}
+.sort_table {
+    cursor: pointer;
+
+    &:hover {
+        color: #219ebc;
+    }
+}

@@ -8,6 +8,8 @@ import { ModalAddNew } from '../components';
 import ModalEditUser from './ModalEditUser';
 import ModalConfirm from './ModalConfirm';
 import lodash from 'lodash';
+import { AiOutlineSortAscending, AiOutlineSortDescending } from 'react-icons/ai'
+import { BsSortNumericDownAlt, BsSortNumericUp } from 'react-icons/bs'
 const TableUsers = (props) => {
   const { show, onHide } = props;
   const [showEdit, setShowEdit] = useState(false)
@@ -17,6 +19,14 @@ const TableUsers = (props) => {
   const [totalPages, setTotalPages] = useState(0)
   const [dataEditUser, setDataEditUser] = useState({})
   const [dataDelUser, setDataDelUser] = useState({})
+  //sap xep tang dan
+  //sap xep mac dinh la tang dan
+  const [sortBy, setSortBy] = useState('asc')
+  //sap xep theo truong id
+  const [fieldSort, setFieldSort] = useState('id')
+
+
+
   useEffect(() => {
     //lay phan tu từ trang dau tien
     getUsers(1);
@@ -69,15 +79,46 @@ const TableUsers = (props) => {
     setShowDel(true)
     setDataDelUser(user)
   }
+  //sap xep
+  const handleSortfield = (sortBy, fieldSort) => {
+    setSortBy(sortBy)
+    setFieldSort(fieldSort)
+    let cloneListUser = lodash.cloneDeep(listUser);
+    cloneListUser = lodash.orderBy(cloneListUser, [fieldSort], [sortBy]);
+    console.log(cloneListUser)
+    setListUser(cloneListUser)
+  }
+
+
   return (
     <>
       <div className='mt-3'>
         <Table striped bordered hover>
           <thead>
             <tr>
-              <th>ID</th>
+              <th className='d-flex justify-content-between  '>
+                ID
+                <div className=''>
+                  <BsSortNumericDownAlt
+                    onClick={() => handleSortfield('desc', 'id')}
+                    className='fs-3 me-2 sort_table' />
+                  <BsSortNumericUp
+                    onClick={() => handleSortfield('asc', 'id')}
+                    className='fs-3 sort_table' />
+                </div>
+              </th>
               <th>Email</th>
-              <th>First name</th>
+              <th className='d-flex justify-content-between '>
+                First name
+                <div className=''>
+                  <AiOutlineSortAscending
+                    onClick={() => handleSortfield('desc', 'first_name')}
+                    className='fs-3 me-2 sort_table' />
+                  <AiOutlineSortDescending
+                    onClick={() => handleSortfield('asc', 'first_name')}
+                    className='fs-3 sort_table' />
+                </div>
+              </th>
               <th>Last name</th>
               <th>Actions</th>
             </tr>
