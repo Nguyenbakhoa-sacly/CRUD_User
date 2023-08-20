@@ -10,7 +10,11 @@ import ModalConfirm from './ModalConfirm';
 import lodash from 'lodash';
 import { debounce } from 'lodash';
 import { AiOutlineSortAscending, AiOutlineSortDescending } from 'react-icons/ai'
-import { BsSortNumericDownAlt, BsSortNumericUp } from 'react-icons/bs'
+import { BsFillFileEarmarkPlusFill, BsSortNumericDownAlt, BsSortNumericUp } from 'react-icons/bs'
+import { FaFileExport } from 'react-icons/fa'
+import { CSVLink } from "react-csv";
+
+
 const TableUsers = (props) => {
   const { show, onHide } = props;
   const [showEdit, setShowEdit] = useState(false)
@@ -20,7 +24,7 @@ const TableUsers = (props) => {
   const [totalPages, setTotalPages] = useState(0)
   const [dataEditUser, setDataEditUser] = useState({})
   const [dataDelUser, setDataDelUser] = useState({})
-
+  const [dataExport, setDataExport] = useState([])
   //sap xep tang dan
   //sap xep mac dinh la tang dan
   const [sortBy, setSortBy] = useState('asc')
@@ -91,7 +95,6 @@ const TableUsers = (props) => {
   }
   //search
   const handleSearch = debounce((e) => {
-
     let key = e.target.value
     if (key) {
       let cloneListUser = lodash.cloneDeep(listUser);
@@ -102,17 +105,60 @@ const TableUsers = (props) => {
       getUsers(1);
     }
   }, 300)
+  //export
+  const getUserExport = (event, done) => {
+    let result = [];
+    if (listUser && listUser.length > 0) {
+      //tao header 
+      result.push(['ID', 'Email', 'First Name', 'Last Name'])
 
+      listUser.map((item, index) => {
+        let arr = [];
+        arr[0] = item.id;
+        arr[1] = item.email;
+        arr[2] = item.first_name;
+        arr[3] = item.last_name;
+        result.push(arr);
+      })
+      setDataExport(result)
+      //xu  ly song va render
+      done();
+    }
+  }
 
   return (
     <>
       <div className=''>
-        <div className=' my-4 '>
+        <div className='d-flex align-items-center  justify-content-between  my-4 '>
           <input
             className='w-25 form-control me-3 py-2'
             placeholder='Search user by email...'
             onChange={(e) => handleSearch(e)}
           />
+
+          <div>
+            {/* import */}
+            <button className='btn btn-outline-success me-2'>
+              <label htmlFor='import'>
+                <BsFillFileEarmarkPlusFill className='fs-4 me-1 ' />
+                Import
+              </label>
+            </button>
+            <input type='file' id='import' hidden />
+            {/* export */}
+            <CSVLink
+              filename={"Users.csv"}
+              target="_blank"
+              data={dataExport}
+              asyncOnClick={true}
+              onClick={getUserExport}
+            >
+              <button className='btn btn-outline-success '>
+                <FaFileExport className='fs-4 me-1' />
+                Export
+              </button>
+            </CSVLink>
+          </div>
         </div>
         <Table striped bordered hover>
           <thead>
