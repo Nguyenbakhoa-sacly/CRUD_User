@@ -8,6 +8,7 @@ import { ModalAddNew } from '../components';
 import ModalEditUser from './ModalEditUser';
 import ModalConfirm from './ModalConfirm';
 import lodash from 'lodash';
+import { debounce } from 'lodash';
 import { AiOutlineSortAscending, AiOutlineSortDescending } from 'react-icons/ai'
 import { BsSortNumericDownAlt, BsSortNumericUp } from 'react-icons/bs'
 const TableUsers = (props) => {
@@ -19,6 +20,7 @@ const TableUsers = (props) => {
   const [totalPages, setTotalPages] = useState(0)
   const [dataEditUser, setDataEditUser] = useState({})
   const [dataDelUser, setDataDelUser] = useState({})
+
   //sap xep tang dan
   //sap xep mac dinh la tang dan
   const [sortBy, setSortBy] = useState('asc')
@@ -85,14 +87,33 @@ const TableUsers = (props) => {
     setFieldSort(fieldSort)
     let cloneListUser = lodash.cloneDeep(listUser);
     cloneListUser = lodash.orderBy(cloneListUser, [fieldSort], [sortBy]);
-    console.log(cloneListUser)
     setListUser(cloneListUser)
   }
+  //search
+  const handleSearch = debounce((e) => {
+
+    let key = e.target.value
+    if (key) {
+      let cloneListUser = lodash.cloneDeep(listUser);
+      cloneListUser = cloneListUser.filter(item => item.email.includes(key))
+      console.log(cloneListUser)
+      setListUser(cloneListUser)
+    } else {
+      getUsers(1);
+    }
+  }, 300)
 
 
   return (
     <>
-      <div className='mt-3'>
+      <div className=''>
+        <div className=' my-4 '>
+          <input
+            className='w-25 form-control me-3 py-2'
+            placeholder='Search user by email...'
+            onChange={(e) => handleSearch(e)}
+          />
+        </div>
         <Table striped bordered hover>
           <thead>
             <tr>
