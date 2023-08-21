@@ -13,7 +13,8 @@ import { AiOutlineSortAscending, AiOutlineSortDescending } from 'react-icons/ai'
 import { BsFillFileEarmarkPlusFill, BsSortNumericDownAlt, BsSortNumericUp } from 'react-icons/bs'
 import { FaFileExport } from 'react-icons/fa'
 import { CSVLink } from "react-csv";
-
+import Papa from 'papaparse'
+import { toast } from 'react-toastify';
 
 const TableUsers = (props) => {
   const { show, onHide } = props;
@@ -125,6 +126,50 @@ const TableUsers = (props) => {
       done();
     }
   }
+  //import
+  const handleImportUser = (e) => {
+    if (e.target && e.target.files && e.target.files[0]) {
+      let file = e.target.files[0]
+      if (file.type !== 'text/csv') {
+        toast.error('Only accept csv file ...')
+        return;
+      }
+      Papa.parse(file, {
+        complete: function (results) {
+          let rawCSV = results.data;
+          if (rawCSV.length > 0) {
+            if (rawCSV[0] && rawCSV[0].length === 3) {
+              if (rawCSV[0][0] !== "email"
+                || rawCSV[0][1] !== "first_name"
+                || rawCSV[0][2] !== "last_name"
+              ) {
+                toast.error(' Wrong formst header csv file!')
+              } else {
+                let result = [];
+                rawCSV.map((item, index) => {
+                  if (index > 0 && item.length === 3) {
+                    let obj = {};
+                    obj.email = item[0]
+                    obj.first_name = item[1]
+                    obj.last_name = item[2]
+                    result.push(obj);
+                  }
+                })
+                console.log('check result:', result)
+                setListUser(result)
+              }
+            } else {
+              toast.error(' Wrong  formst csv file!')
+            }
+          } else {
+            toast.error(' Not found data on CSV file!')
+          }
+          console.log(rawCSV)
+        }
+      })
+
+    }
+  }
 
   return (
     <>
@@ -144,7 +189,11 @@ const TableUsers = (props) => {
                 Import
               </label>
             </button>
-            <input type='file' id='import' hidden />
+            <input
+              onChange={(e) => handleImportUser(e)}
+              type='file'
+              id='import'
+              hidden />
             {/* export */}
             <CSVLink
               filename={"Users.csv"}
