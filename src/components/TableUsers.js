@@ -17,7 +17,8 @@ import Papa from 'papaparse'
 import { toast } from 'react-toastify';
 
 const TableUsers = (props) => {
-  const { show, onHide } = props;
+  // const { show, onHide } = props;
+  const [show, setShow] = useState(false)
   const [showEdit, setShowEdit] = useState(false)
   const [showDel, setShowDel] = useState(false)
   const [listUser, setListUser] = useState([])
@@ -74,6 +75,12 @@ const TableUsers = (props) => {
     getUsers(+e.selected + 1);
 
   }
+
+  //add user
+  const handleAddNewUser = () => {
+    setShow(true);
+  }
+
   //edit
   const handleEditUser = (user) => {
     setShowEdit(true)
@@ -130,6 +137,7 @@ const TableUsers = (props) => {
   const handleImportUser = (e) => {
     if (e.target && e.target.files && e.target.files[0]) {
       let file = e.target.files[0]
+
       if (file.type !== 'text/csv') {
         toast.error('Only accept csv file ...')
         return;
@@ -173,6 +181,13 @@ const TableUsers = (props) => {
 
   return (
     <>
+      <div className='mt-3 d-flex justify-content-between align-items-center '>
+        <p className='mb-0 fs-4 fw-semibold'>List Users</p>
+        <button
+          onClick={() => handleAddNewUser()}
+          className='btn btn-outline-success '
+        >Add New User</button>
+      </div>
       <div className=''>
         <div className='d-flex align-items-center  justify-content-between  my-4 '>
           <input
@@ -292,7 +307,7 @@ const TableUsers = (props) => {
 
       <ModalAddNew
         show={show}
-        onHide={onHide}
+        onHide={() => setShow(false)}
         handleUpDateTable={handleUpDateTable}
       />
 
