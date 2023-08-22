@@ -1,6 +1,6 @@
 import './App.scss'
 import Container from 'react-bootstrap/Container';
-import { Header, TableUsers, Home, Login } from './components';
+import { Header, TableUsers, Login } from './components';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Route, Routes } from 'react-router';
@@ -12,7 +12,6 @@ function App() {
         <Header />
         <Container>
           <Routes>
-            <Route path='/' element={<Home />} />
             <Route path='/user' element={<TableUsers />} />
             <Route path='/login' element={<Login />} />
           </Routes>

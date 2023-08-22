@@ -20,7 +20,7 @@ const Login = () => {
   useEffect(() => {
     let token = localStorage.getItem('token')
     if (token) {
-      navigate('/')
+      navigate('/user')
     }
   }, [])
   const handleLogin = async (e) => {
@@ -33,7 +33,7 @@ const Login = () => {
     let res = await loginAPI(email, password);
     if (res && res.token) {
       localStorage.setItem("token", res.token)
-      navigate('/')
+      navigate('/user')
     } else {
       //error
       if (res && res.status === 400) {

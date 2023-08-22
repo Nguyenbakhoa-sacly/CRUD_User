@@ -13,16 +13,17 @@ import { toast } from 'react-toastify';
 const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
+
   const handleLogOut = () => {
     localStorage.removeItem('token');
-    navigate('/');
+    navigate('/user');
     toast.success('Log out success')
   }
   return (
     <>
       <Navbar expand="lg" className="bg-body-tertiary">
         <Container>
-          <Navbar.Brand className='d-flex align-items-center ' href="/">
+          <Navbar.Brand className='d-flex align-items-center ' href="">
             <img
               src={logo}
               width="60"
@@ -36,7 +37,7 @@ const Header = () => {
           <Navbar.Collapse id="basic-navbar-nav" >
 
             <Nav className='me-auto' activeKey={location.pathname}>
-              <NavLink className='nav-link' to='/'>Home</NavLink>
+              {/* <NavLink className='nav-link' to='/'>Home</NavLink> */}
               <NavLink className='nav-link' to='/user'>Manager user</NavLink>
             </Nav>
 
