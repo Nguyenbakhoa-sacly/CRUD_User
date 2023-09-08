@@ -1,25 +1,69 @@
 
-import { USER_LOGIN, USER_LOGOUT } from '../actions/userActions';
+import { USER_REFETCH, USER_LOGOUT, FETCH_USER_LOIGIN, FETCH_USER_SUCCESS, FETCH_USER_ERROR } from '../actions/userActions';
 
 const INITIAL_STATE = {
-
   account: {
     email: '',
-    auth: false
-  }
+    auth: null,
+    token: '',
+  },
+  isLoading: false,
+  isError: false,
 };
-
 
 const userReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case USER_LOGIN:
+    case FETCH_USER_LOIGIN:
       return {
-        ...state, count: state.count + 1,
+        ...state,
+        isLoading: true,
+        isError: false,
       };
+
+    case FETCH_USER_SUCCESS:
+      console.log('>>>check action', action);
+      return {
+        ...state,
+        //cap nhat lai account
+        account: {
+          email: action.data.email,
+          auth: true,
+          token: action.data.token,
+        },
+        isLoading: false,
+        isError: false,
+      };
+    //login that bai
+    case FETCH_USER_ERROR:
+      return {
+        ...state,
+        account: {
+          auth: false,
+        },
+        isLoading: false,
+        isError: true,
+      };
+    //login thang cong
     case USER_LOGOUT:
+      localStorage.removeItem('token');
+      localStorage.removeItem('email');
       return {
-        ...state, count: state.count - 1,
-      };
+        ...state,
+        account: {
+          email: '',
+          auth: false,
+          token: '',
+        }
+      }
+    case USER_REFETCH:
+      return {
+        ...state,
+        account: {
+          email: localStorage.getItem('email'),
+          auth: true,
+          token: localStorage.getItem('token'),
+        }
+      }
     default: return state;
   }
 }

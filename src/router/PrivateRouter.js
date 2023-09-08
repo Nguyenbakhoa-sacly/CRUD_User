@@ -1,9 +1,9 @@
-import { useContext } from 'react';
-import { UserContext } from '../context/UserContext';
+
 import Alert from 'react-bootstrap/Alert';
+import { useSelector } from 'react-redux';
 
 const PrivateRouter = (props) => {
-  const { user } = useContext(UserContext);
+  const user = useSelector(state => state.user.account)
   if (user && !user.auth) {
     return <>
       <Alert className='mt-3' variant="danger" >
@@ -14,7 +14,6 @@ const PrivateRouter = (props) => {
       </Alert>
     </>
   }
-  console.log('You have permission to access this route')
   return (
     <>
       {props.children}

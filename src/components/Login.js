@@ -1,51 +1,47 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import '../assets/scss/login.scss';
 import { Link, useNavigate } from 'react-router-dom';
 import { IoCaretBackOutline } from 'react-icons/io5'
 import { BsTwitter, BsGithub, BsGoogle } from 'react-icons/bs'
 import { BiHide, BiShowAlt } from 'react-icons/bi'
 import { useState } from 'react';
-import { loginAPI } from '../services/UserService';
 import { toast } from 'react-toastify';
 import Loader from './Loader';
-import { UserContext } from '../context/UserContext';
-
+import { handleLoginRedux } from '../redux/actions/userActions'
+import { useDispatch, useSelector } from 'react-redux';
 const Login = () => {
   const navigate = useNavigate()
-
-  const { loginContext } = useContext(UserContext);
-
+  const dispatch = useDispatch()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isHiddenShow, setIsHiddenShow] = useState(false)
-  const [loadingAPI, setLoadingAPI] = useState(false)
 
+  const isLoading = useSelector(state => state.user.isLoading)
+  const account = useSelector(state => state.user.account)
   const handleLogin = async (e) => {
     e.preventDefault()
-    setLoadingAPI(true);
+
     if (!email || !password) {
       toast.error('Email or password is required!')
       return;
     }
-    let res = await loginAPI(email.trim(), password);
-    if (res && res.token) {
-      loginContext(email, res.token);
-      navigate('/user')
-    } else {
-      //error
-      if (res && res.status === 400) {
-        toast.error(res.data.error)
-      }
-    }
-    setLoadingAPI(false)
+    dispatch(handleLoginRedux(email, password))
   }
+  useEffect(() => {
+    if (account && account.auth === true) {
+      navigate('/user');
+    }
+  },
+    //neu account thay doi 
+    [account])
+
 
   //enter de dang nhap
-  const handleOnKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      handleLogin();
-    }
-  }
+  // const handleOnKeyDown = (e) => {
+  //   if (e.key === 'Enter') {
+  //     handleLogin();
+  //   }
+  // }
 
   return (
     <>
@@ -77,13 +73,14 @@ const Login = () => {
                 {
                   isHiddenShow === true ? <BiShowAlt onClick={() => setIsHiddenShow(!isHiddenShow)} /> : <BiHide onClick={() => setIsHiddenShow(!isHiddenShow)} />
                 }
-
               </label>
 
               <div className="forgot">
                 <Link rel="noopener noreferrer" to=''>Forgot Password ?</Link>
               </div>
-              {loadingAPI && <Loader />}
+
+              {isLoading && <Loader />}
+
             </div>
             <button
               type='submit'
