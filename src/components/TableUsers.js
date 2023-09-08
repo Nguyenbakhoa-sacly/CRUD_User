@@ -189,97 +189,104 @@ const TableUsers = (props) => {
         >Add New User</button>
       </div>
       <div className=''>
-        <div className='d-flex align-items-center  justify-content-between  my-4 '>
+        <div className=' my-4 '>
+          <div className=' d-flex justify-content-end gap-3'>
+            <div className=' '>
+              {/* import */}
+              <button className='  btn btn-outline-success '>
+                <label htmlFor='import'>
+                  <BsFillFileEarmarkPlusFill className='fs-4 me-1 ' />
+                  Import
+                </label>
+              </button>
+              <input
+                onChange={(e) => handleImportUser(e)}
+                type='file'
+                id='import'
+                hidden />
+            </div>
+            <div className=' '>
+              {/* export */}
+              <CSVLink
+                className=''
+                filename={"Users.csv"}
+                target="_blank"
+                data={dataExport}
+                asyncOnClick={true}
+                onClick={getUserExport}
+              >
+                <button className='btn btn-outline-success '>
+                  <FaFileExport className='fs-4 ' />
+                  Export
+                </button>
+              </CSVLink>
+            </div>
+
+          </div>
           <input
-            className='w-25 form-control me-3 py-2'
+            className=' col-12 col-sm-4   form-control mt-sm-4 mt-4 py-2'
             placeholder='Search user by email...'
             onChange={(e) => handleSearch(e)}
           />
-
-          <div>
-            {/* import */}
-            <button className='btn btn-outline-success me-2'>
-              <label htmlFor='import'>
-                <BsFillFileEarmarkPlusFill className='fs-4 me-1 ' />
-                Import
-              </label>
-            </button>
-            <input
-              onChange={(e) => handleImportUser(e)}
-              type='file'
-              id='import'
-              hidden />
-            {/* export */}
-            <CSVLink
-              filename={"Users.csv"}
-              target="_blank"
-              data={dataExport}
-              asyncOnClick={true}
-              onClick={getUserExport}
-            >
-              <button className='btn btn-outline-success '>
-                <FaFileExport className='fs-4 me-1' />
-                Export
-              </button>
-            </CSVLink>
-          </div>
         </div>
-        <Table striped bordered hover>
-          <thead>
-            <tr>
-              <th className='d-flex justify-content-between  '>
-                ID
-                <div className=''>
-                  <BsSortNumericDownAlt
-                    onClick={() => handleSortfield('desc', 'id')}
-                    className='fs-3 me-2 sort_table' />
-                  <BsSortNumericUp
-                    onClick={() => handleSortfield('asc', 'id')}
-                    className='fs-3 sort_table' />
-                </div>
-              </th>
-              <th>Email</th>
-              <th className='d-flex justify-content-between '>
-                First name
-                <div className=''>
-                  <AiOutlineSortAscending
-                    onClick={() => handleSortfield('desc', 'first_name')}
-                    className='fs-3 me-2 sort_table' />
-                  <AiOutlineSortDescending
-                    onClick={() => handleSortfield('asc', 'first_name')}
-                    className='fs-3 sort_table' />
-                </div>
-              </th>
-              <th>Last name</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {
-              listUser && listUser.map((user, index) => {
-                return (
-                  <tr key={`users-${index}`}>
-                    <td>{user.id}</td>
-                    <td>{user.email}</td>
-                    <td>{user.first_name}</td>
-                    <td>{user.last_name}</td>
-                    <td className=' flex flex-row '>
-                      <button
-                        onClick={() => handleEditUser(user)}
-                        className='btn btn-outline-primary me-3'>Edit
-                      </button>
-                      <button
-                        onClick={() => handelDelUser(user)}
-                        className='btn btn-outline-danger'>Delete
-                      </button>
-                    </td>
-                  </tr>
-                )
-              })
-            }
+        <div className='customize_table '>
+          <Table striped bordered hover>
+            <thead>
+              <tr>
+                <th className='d-flex align-items-center justify-content-between gap-4  '>
+                  ID
+                  <div className='d-flex '>
+                    <BsSortNumericDownAlt
+                      onClick={() => handleSortfield('desc', 'id')}
+                      className='fs-3 me-2 sort_table' />
+                    <BsSortNumericUp
+                      onClick={() => handleSortfield('asc', 'id')}
+                      className='fs-3 sort_table' />
+                  </div>
+                </th>
+                <th className=''>Email</th>
+                <th className='d-flex justify-content-between  gap-4'>
+                  First name
+                  <div className='d-flex'>
+                    <AiOutlineSortAscending
+                      onClick={() => handleSortfield('desc', 'first_name')}
+                      className='fs-3 me-2 sort_table' />
+                    <AiOutlineSortDescending
+                      onClick={() => handleSortfield('asc', 'first_name')}
+                      className='fs-3 sort_table' />
+                  </div>
+                </th>
+                <th className=''>Last name</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                listUser && listUser.map((user, index) => {
+                  return (
+                    <tr key={`users-${index}`}>
+                      <td>{user.id}</td>
+                      <td>{user.email}</td>
+                      <td>{user.first_name}</td>
+                      <td>{user.last_name}</td>
+                      <td className=' d-flex '>
+                        <button
+                          onClick={() => handleEditUser(user)}
+                          className='btn btn-outline-primary me-3'>Edit
+                        </button>
+                        <button
+                          onClick={() => handelDelUser(user)}
+                          className='btn btn-outline-danger'>Delete
+                        </button>
+                      </td>
+                    </tr>
+                  )
+                })
+              }
 
-          </tbody>
-        </Table>
+            </tbody>
+          </Table>
+        </div>
         <div className=' justify-content-center  d-flex'>
 
           <ReactPaginate

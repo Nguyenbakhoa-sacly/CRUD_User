@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import '../assets/scss/login.scss';
 import { Link, useNavigate } from 'react-router-dom';
 import { IoCaretBackOutline } from 'react-icons/io5'
@@ -8,21 +8,18 @@ import { useState } from 'react';
 import { loginAPI } from '../services/UserService';
 import { toast } from 'react-toastify';
 import Loader from './Loader';
+import { UserContext } from '../context/UserContext';
 
 const Login = () => {
   const navigate = useNavigate()
+
+  const { loginContext } = useContext(UserContext);
+
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isHiddenShow, setIsHiddenShow] = useState(false)
   const [loadingAPI, setLoadingAPI] = useState(false)
 
-
-  useEffect(() => {
-    let token = localStorage.getItem('token')
-    if (token) {
-      navigate('/user')
-    }
-  }, [])
   const handleLogin = async (e) => {
     e.preventDefault()
     setLoadingAPI(true);
@@ -30,9 +27,9 @@ const Login = () => {
       toast.error('Email or password is required!')
       return;
     }
-    let res = await loginAPI(email, password);
+    let res = await loginAPI(email.trim(), password);
     if (res && res.token) {
-      localStorage.setItem("token", res.token)
+      loginContext(email, res.token);
       navigate('/user')
     } else {
       //error
@@ -43,10 +40,15 @@ const Login = () => {
     setLoadingAPI(false)
   }
 
+  //enter de dang nhap
+  const handleOnKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleLogin();
+    }
+  }
 
   return (
     <>
-
       <div className='wrapper'>
         <div className="form-container">
           <p className="title">Login</p>
@@ -66,6 +68,7 @@ const Login = () => {
               <input
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                // onKeyDown={(e) => handleOnKeyDown(e)}
                 type={isHiddenShow === true ? 'text' : 'password'}
                 name="password"
                 id="password"
