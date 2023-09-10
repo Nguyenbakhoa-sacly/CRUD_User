@@ -15,7 +15,6 @@ const Login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isHiddenShow, setIsHiddenShow] = useState(false)
-
   const isLoading = useSelector(state => state.user.isLoading)
   const account = useSelector(state => state.user.account)
   const handleLogin = async (e) => {
@@ -27,6 +26,7 @@ const Login = () => {
     }
     dispatch(handleLoginRedux(email, password))
   }
+
   useEffect(() => {
     if (account && account.auth === true) {
       navigate('/user');

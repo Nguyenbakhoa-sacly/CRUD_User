@@ -1,6 +1,6 @@
 
 
-import React, { useState } from 'react'
+import React from 'react'
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
@@ -24,6 +24,7 @@ const Header = () => {
   }
 
   useEffect(() => {
+    // truong hop login that bai
     if (user && user.auth === false && location.pathname !== '/login') {
       navigate('/user');
       toast.success('Log out success')
